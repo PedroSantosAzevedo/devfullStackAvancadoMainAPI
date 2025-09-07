@@ -5,7 +5,7 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return JSONResponse(content={"message": "Welcome to the Basic Flask API!"})
+    return JSONResponse(content={"message": "Welcome to my new Basic FastAPI!"})
 
 @app.get("/ping")
 def ping():
