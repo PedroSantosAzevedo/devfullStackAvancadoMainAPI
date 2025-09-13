@@ -1,20 +1,31 @@
 version: '3.8'
 
 services:
-  web:
-    build: .
+  main_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
+    
     environment:
       - ENVIRONMENT=development
-    depends_on:
-      - devfullstackavancadodbapi
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - default
+    #command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     
-  devfullstackavancadodbapi:
+  db_api:
     #image: devfullstackavancadodbapi:latest
-    build: .
+    build:
+      context: ../devfullstackavancadodbapi
+      dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "7000:7000"
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "127.0.0.1"

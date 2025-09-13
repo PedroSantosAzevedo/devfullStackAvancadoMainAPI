@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import httpx
 from APIModels.trainer import Trainer
+from schemes import TrainerSchema
 import fastapi.middleware.cors as cors
 
 
@@ -20,10 +21,10 @@ app.add_middleware(
 async def get_trainer(trainer_name: str):
     async with httpx.AsyncClient() as client:
         print("Fetching trainer data...")
-        response = await client.get(f"http:///127.0.0.1:5000/getTrainer/{trainer_name}")
+        response = await client.get(f"http://db_api:7000/getTrainer/{trainer_name}")
         if response.status_code == 200:
             data = response.json()
-            trainer =  Trainer.model_validate(data)
+            trainer =  TrainerSchema.model_validate(data)
             return JSONResponse(content={"trainer": trainer.model_dump()}, status_code=200)
         else:
             return JSONResponse(content={"error": "Trainer not found"}, status_code=404)
