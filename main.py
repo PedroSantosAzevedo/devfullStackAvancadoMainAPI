@@ -3,10 +3,7 @@ import random
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import httpx
-from APIModels import trainer
 from schemes import *
-from schemes.location import Location
-
 
 app = FastAPI()
 
@@ -34,7 +31,6 @@ async def capture_pokemon(data: CapturePokemonSchema):
         else:
             return JSONResponse(content={"error": "Location not found"}, status_code=404)      
 
-
 @app.get("/randomLocation/")
 async def get_random_location():
     location = random.randint(1,10)
@@ -61,18 +57,6 @@ async def update_player_location(data: UpdatePlayerLocationSchema):
             return JSONResponse(content={"trainer": trainer.model_dump()}, status_code=200)
         else:
             return JSONResponse(content={"error": "Trainer not found"}, status_code=404)
-
-# @app.get("/getRandomEncounter/{location}")
-# async def get_random_encounter(location: LocationArea):
-#     async with httpx.AsyncClient() as client:
-#         response = await client.get(f"http://db_api:7000/getRandomEncounter/{location.name}")
-#         print(response.json())
-#         if response.status_code == 200:
-#             data = response.json()
-#             pokemonSchema = PokemonSchema.model_validate(data)
-#             return JSONResponse(content={"pokemon": pokemonSchema.model_dump()}, status_code=200)
-#         else:
-#             return JSONResponse(content={"error": "Location not found"}, status_code=404)
 
 @app.get("/getAreaRandomPokemon/{location_name}")
 async def get_area_random_pokemon(location_name: str):
@@ -114,6 +98,18 @@ async def get_location(locationName: str):
             return JSONResponse(content={"location": loc.model_dump()}, status_code=200)
         else:
             return JSONResponse(content={"error": "Location not found"}, status_code=404)
+        
+@app.delete("/deleteTrainer/{trainer_name}")
+async def delete_trainer(trainer_name: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.delete(f"http://db_api:7000/deleteTrainer/{trainer_name}")
+        return JSONResponse(content=response.json(), status_code=response.status_code)
+    
+@app.get("/listAllTrainers/")
+async def list_all_trainers():
+    async with httpx.AsyncClient() as client:
+        response = await client.get("http://db_api:7000/listAllTrainers/")
+        return JSONResponse(content=response.json(), status_code=response.status_code)
 
 @app.get("/")
 def home():
