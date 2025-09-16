@@ -82,6 +82,8 @@ Pokémon
 
     GET /getAreaRandomPokemon/{location_name} - Obtém um Pokémon aleatório de uma área
 
+    GET /listPokemons/ - Lista todos os pokemons de um treinador
+
 Localizações
 
     GET /randomLocation/ - Obtém uma localização aleatória
