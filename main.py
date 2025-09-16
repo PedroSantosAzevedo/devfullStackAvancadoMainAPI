@@ -88,6 +88,16 @@ async def get_area_random_pokemon(location_name: str, client: httpx.AsyncClient 
         return {"pokemon": pokemon_schema.model_dump()}
     raise HTTPException(status_code=404, detail="Pokemon not found")
 
+@app.get("/listPokemon/{trainer_name}", tags=["pokemon"])
+async def list_all_pokemon(trainer_name: str, client: httpx.AsyncClient = Depends(get_http_client)):
+    response = await make_db_api_request(client, "GET", f"/listPokemon/{trainer_name}")
+    return JSONResponse(content=response.json(), status_code=response.status_code)
+
+@app.delete("/deletePokemon", tags=["pokemon"])
+async def delete_pokemon(deleteInfo: DeletePokemonSchema, client: httpx.AsyncClient = Depends(get_http_client)):
+    response = await make_db_api_request(client, "DELETE", f"/deletePokemon", json=deleteInfo.model_dump())
+    return JSONResponse(content=response.json(), status_code=response.status_code)
+
 @app.get("/randomArea/{location_name}", response_model=dict, tags=["locations"])
 async def get_random_area(location_name: str, client: httpx.AsyncClient = Depends(get_http_client)):
     location_response = await get_location(location_name, client)
