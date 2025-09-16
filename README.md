@@ -1,6 +1,9 @@
 # Pokemon Trainer API
 
 ### Uma API interativa para treinadores Pokémon, desenvolvida em Python com FastAPI, que se integra com a PokeAPI e um banco de dados para gerenciar informações de treinadores e suas capturas.
+
+![POKEAPIDiagram](https://github.com/user-attachments/assets/0e9593b4-1bdf-4622-835b-863787dc7f53)
+
 ### 🚀 Tecnologias Utilizadas
 
     FastAPI (v0.116.1) - Framework web moderno e rápido para APIs
