@@ -1,133 +1,142 @@
-# Minha API
+# Pokemon Trainer API
 
-Este pequeno projeto faz parte do material diático da Disciplina **Desenvolvimento Full Stack Avancado** 
+### Uma API interativa para treinadores Pokémon, desenvolvida em Python com FastAPI, que se integra com a PokeAPI e um banco de dados para gerenciar informações de treinadores e suas capturas.
+### 🚀 Tecnologias Utilizadas
 
-O objetivo aqui é ilutsrar o conteúdo apresentado ao longo das três aulas da disciplina.
+    FastAPI (v0.116.1) - Framework web moderno e rápido para APIs
 
----
-## Como executar 
+    Pydantic (v2.10.2) - Validação de dados e configuração usando tipos Python
+
+    SQLAlchemy (v2.0.23) - ORM para interação com banco de dados
+
+    Uvicorn (v0.24.0) - Servidor ASGI para execução da aplicação
+
+    HTTPX (v0.28.1) - Cliente HTTP assíncrono para integrações com APIs externas
+
+## 📋 Funcionalidades
+
+    Gerenciamento de treinadores Pokémon (criação, consulta, atualização e exclusão)
+
+    Captura de Pokémon em localizações aleatórias
+
+    Consulta de informações da PokeAPI
+
+    Atualização de localização do jogador
+
+    Listagem de todos os treinadores cadastrados
+
+## 🏗️ Estrutura do Projeto
+
+    ├── main.py             # Arquivo principal da aplicação FastAPI
+    ├── schemes.py          # Esquemas Pydantic para validação de dados
+    ├── Dockerfile          # Configuração do container Docker
+    ├── docker-compose.yml  # Orquestração de containers
+    └── requirements.txt    # Dependências do projeto
+
+## 🔧 Configuração e Instalação
+Pré-requisitos
+
+    Docker
+
+    Docker Compose
+
+Executando a Aplicação
+
+    Clone o repositório:
+
+bash
+
+git clone <url-do-repositorio>
+cd <diretorio-do-projeto>
+
+    Execute o Docker Compose:
+
+bash
+
+docker-compose up
+
+    A API estará disponível em: http://localhost:8000
+
+    Acesse a documentação interativa da API:
+
+        Swagger UI: http://localhost:8000/docs
+
+        ReDoc: http://localhost:8000/redoc
+
+## 📡 Endpoints Principais
+Treinadores
+
+    GET /getTrainer/{trainer_name} - Obtém informações de um treinador
+
+    POST /createTrainer - Cria um novo treinador
+
+    PATCH /updatePlayerLocation/ - Atualiza a localização de um treinador
+
+    DELETE /deleteTrainer/{trainer_name} - Remove um treinador
+
+    GET /listAllTrainers/ - Lista todos os treinadores
+
+Pokémon
+
+    POST /capturePokemon/ - Captura um Pokémon em uma localização
+
+    GET /getAreaRandomPokemon/{location_name} - Obtém um Pokémon aleatório de uma área
+
+Localizações
+
+    GET /randomLocation/ - Obtém uma localização aleatória
+
+    GET /randomArea/{location_name} - Obtém uma área aleatória de uma localização
+
+    GET /location/{location_name} - Obtém informações de uma localização específica
+
+## 🔌 Integrações
+PokeAPI
+
+A aplicação se integra com a PokeAPI para obter informações sobre:
+
+    Pokémon
+
+    Localizações
+
+    Áreas de encontro
+
+API de Banco de Dados
+
+A aplicação se comunica com uma API de banco de dados separada para:
+
+    Armazenar informações dos treinadores
+
+    Registrar Pokémon capturados
+
+    Gerenciar localizações dos jogadores
+
+## 🐳 Configuração Docker
+
+O projeto utiliza Docker Compose para orquestrar dois serviços:
+
+    main_api: A API principal (esta aplicação)
+
+    db_api: API de banco de dados para persistência
+
+A rede é configurada com bridge mode para facilitar a comunicação entre os containers.
+
+##📝 Esquemas de Dados
+
+Os principais esquemas utilizados na API incluem:
+
+    TrainerSchema: Representa um treinador Pokémon
+
+    PokemonSchema: Representa um Pokémon
+
+    Location: Representa uma localização do mundo Pokémon
+
+    CapturePokemonSchema: Esquema para requisição de captura de Pokémon
 
 
-Será necessário ter todas as libs python listadas no `requirements.txt` instaladas.
-Após clonar o repositório, é necessário ir ao diretório raiz, pelo terminal, para poder executar os comandos descritos abaixo.
+## 🤝 Contribuição
 
-> É fortemente indicado o uso de ambientes virtuais do tipo [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html).
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+## 📄 Licença
 
-```
-python3 -m venv <myenvpath>
-```
-
-```
-source venv/Scripts/activate
-```
-
-```
-(env)$ pip install -r requirements.txt
-```
-
-Este comando instala as dependências/bibliotecas, descritas no arquivo `requirements.txt`.
-
-Para executar a API  basta executar:
-
-```
-(env)$  uvicorn main:app 
-```
-
-Em modo de desenvolvimento é recomendado executar utilizando o parâmetro reload, que reiniciará o servidor
-automaticamente após uma mudança no código fonte. 
-
-```
-(env)$  uvicorn main:app --reload
-```
-
-Abra o [http://localhost:5000/#/](http://localhost:5000/#/) no navegador para verificar o status da API em execução.
-
-## Rotas Principais
-
-1. POST /paciente
-Adiciona novo paciente
-Parâmetros (body):
-```
-{
-  "first_name": "João",
-  "last_name": "Silva",
-  "cpf": "12345678901",
-  "email": "joao@email.com",
-  "phone_number": "11999998888",
-  "address": "Rua A, 123"
-}
-```
-Respostas:
-```
-200: Paciente criado com sucesso
-409: CPF ou nome já existente
-400: Erro na requisição
-```
-2. GET /pacientes
-Lista todos os pacientes
-Exemplo de resposta:
-```
-{
-  "pacientes": [
-    {
-      "id": 1,
-      "nome_completo": "João Silva",
-      "cpf": "12345678901",
-      "email": "joao@email.com",
-      "telefone": "11999998888",
-      "endereco": "Rua A, 123"
-    }
-  ]
-}
-```
-4. POST /pacienteCompleto/
-Busca paciente por CPF
-Parâmetros (body)
-```
-{
-  "cpf": "12345678901"
-}
-```
-Respostas:
-```
-200: Dados completos do paciente
-404: Paciente não encontrado
-502: Erro no banco de dados
-```
-5. DELETE /delPaciente
-Remove paciente por CPF
-Parâmetros (query):
-```
-DELETE /delPaciente?cpf=12345678901
-```
-Respostas:
-
-```
-200: {"mesage": "Produto removido", "id": "12345678901"}
-404: Paciente não encontrado
-```
-6. GET /
-Redireciona para documentação
-Acesso às opções de documentação interativa (Swagger/Redoc/RapiDoc)
-
-
-## Modelo de Dados (Patient):
-
-```
-class Patient(Model):
-    id = Column(Integer, primary_key=True)
-    first_name = Column(String)
-    last_name = Column(String)
-    cpf = Column(String, unique=True)
-    email = Column(String)
-    phone_number = Column(String)
-    address = Column(String)
-```
-
-## Schemas (Esquemas de Validação):
-```
-PatientSchema: Valida dados para criação
-PatientNameSearchSchema: Valida busca por nome
-PatientFetchSchema: Valida busca por CPF
-PatientDelSchema: Valida exclusão por CPF
-```
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
