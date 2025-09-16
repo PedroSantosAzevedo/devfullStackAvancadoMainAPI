@@ -26,10 +26,10 @@ async def make_pokeapi_request(client, endpoint):
     return response
 
 # Routes
-@app.get("/getTrainer/{trainer_name}", response_model=dict, tags=["trainers"])
-async def get_trainer(trainer_name: str, client: httpx.AsyncClient = Depends(get_http_client)):
-    response = await make_db_api_request(client, "GET", f"/getTrainer/{trainer_name}")
-    
+@app.get("/getTrainer/{trainer_id}", response_model=dict, tags=["trainers"])
+async def get_trainer(trainer_id: int, client: httpx.AsyncClient = Depends(get_http_client)):
+    response = await make_db_api_request(client, "GET", f"/getTrainer/{trainer_id}")
+
     if response.status_code == 200:
         trainer = TrainerSchema.model_validate(response.json())
         return {"trainer": trainer.model_dump()}
@@ -101,14 +101,17 @@ async def delete_pokemon(deleteInfo: DeletePokemonSchema, client: httpx.AsyncCli
 @app.get("/randomArea/{location_name}", response_model=dict, tags=["locations"])
 async def get_random_area(location_name: str, client: httpx.AsyncClient = Depends(get_http_client)):
     location_response = await get_location(location_name, client)
-    location_data = json.loads(location_response.body.decode())["location"]
+    if location_response.status_code != 200:
+        raise HTTPException(status_code=404, detail="Location not found")
+    
+    location_data = json.loads(location_response.body.decode())
     location = Location(**location_data)
     
     random_area = random.choice(location.areas)
     response = await client.get(random_area.url)
     
     if response.status_code == 200:
-        return response.json()
+        return JSONResponse(content=response.json(), status_code=response.status_code)
     raise HTTPException(status_code=404, detail="Area not found")
 
 @app.get("/location/{location_name}", response_model=dict, tags=["locations"])
@@ -117,7 +120,7 @@ async def get_location(location_name: str, client: httpx.AsyncClient = Depends(g
     
     if response.status_code == 200:
         loc = Location.model_validate(response.json())
-        return {"location": loc.model_dump()}
+        return JSONResponse(content=loc.model_dump(), status_code=response.status_code)
     raise HTTPException(status_code=404, detail="Location not found")
 
 @app.delete("/deleteTrainer/{trainer_name}", tags=["trainers"])

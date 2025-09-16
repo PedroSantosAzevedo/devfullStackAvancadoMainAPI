@@ -1,8 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional, List
-from datetime import datetime
 from schemes import PokemonSchema
-
+from typing import Optional
 
 class TrainerSchema(BaseModel):
     """ Define como um novo treinador a ser inserido deve ser representado
@@ -10,19 +8,20 @@ class TrainerSchema(BaseModel):
     name: str = "John Doe"
     number_of_encounters: int = 0
     current_location: str = "Unknown"
+    id: Optional[int] = None
     
     class Config:
         from_attributes = True
 
 class UpdatePlayerLocationSchema(BaseModel):
-    trainer_name: str
+    trainer_id: int
     new_location: str
 
     class Config:
         from_attributes = True
 
 class CapturePokemonTrainerSchema(BaseModel):
-    name: str
+    id: int
 
     class Config:
         from_attributes = True

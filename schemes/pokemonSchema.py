@@ -13,7 +13,7 @@ class PokemonSchema(BaseModel):
 class DeletePokemonSchema(BaseModel):
     """ Define como um pokemon a ser deletado deve ser representado
     """
-    trainer_name: str = "John Doe"
+    trainer_id: int = 1
     pokemon_id: int = 1
 
     class Config:
